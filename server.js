@@ -9,13 +9,13 @@ require('dotenv').config();
 const apiRoutes         = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
 const runner            = require('./test-runner');
+require('./db/connection.js');
 
 let app = express();
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
 app.use(cors({origin: '*'})); //For FCC testing purposes only
-
 
 
 app.use(bodyParser.json());
@@ -37,7 +37,7 @@ app.route('/')
 fccTestingRoutes(app);
 
 //Routing for API 
-apiRoutes(app);  
+app.use(apiRoutes);  
     
 //404 Not Found Middleware
 app.use(function(req, res, next) {
@@ -58,7 +58,7 @@ const listener = app.listen(process.env.PORT || 3000, function () {
         console.log('Tests are not valid:');
         console.error(e);
       }
-    }, 3500);
+    }, 1000);
   }
 });
 
